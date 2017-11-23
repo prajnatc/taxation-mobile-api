@@ -1,0 +1,324 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Pacifyca mobile api for parents [http://localhost:9001](http://localhost:9001/).",
+        "version": "1.0.0",
+        "title": "Pacifyca Mobile API",
+        "contact": {
+            "email": ["apps@thinkpace.in","texeira@thinkpace.in"]
+        }
+    },
+    "host": "localhost:9001",
+    "basePath": "/v1",
+    "tags": [{
+        "name": "parent",
+        "description": "Everything about parents"
+    }, {
+        "name": "store",
+        "description": "Access to Petstore orders"
+    }, {
+        "name": "user",
+        "description": "Operations about user",
+        "externalDocs": {
+            "description": "Find out more about our store",
+            "url": "http://localhost:9001"
+        }
+    }],
+    "schemes": ["http"],
+    "paths": {
+        "/login-available-types": {
+            "get": {
+                "tags": ["Login Page"],
+                "summary": "Returns Login available types",
+                "description": "Returns Login available types",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Invalid input"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key":[]
+                    }
+                ]
+            },
+        },
+        "/auth/generate-otp": {
+            "post": {
+                "tags": ["Login Page"],
+                "summary": "Generate OTP number for mobile number",
+                "description": "Generating otp number if the user exists.",
+                "operationId": "generateOtp",
+                "produces": ["application/json","application/x-www-form-urlencoded"],
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Generate OTP Object",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                }],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key":[]
+                    }
+                ]
+            }
+        },
+        "/auth/signin": {
+            "post": {
+                "tags": ["Login Page"],
+                "summary": "SignIn to application",
+                "description": "Generating valid token to access restricted .",
+                "operationId": "autSigin",
+                "produces": ["application/json","application/x-www-form-urlencoded"],
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Generate Valid Login credentials",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/UserSignInObject"
+                    }
+                }],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key":[]
+                    }
+                ]
+            }
+        },
+        "/parent": {
+            "get": {
+                "tags": ["Main Page"],
+                "summary": "Get Logged in parent Details",
+                "description": "",
+                "operationId": "parentDetail",
+                "produces": ["application/json"],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key":[],
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "tags": ["Main Page"],
+                "summary": "Logs out current logged in user session",
+                "description": "",
+                "operationId": "logoutUser",
+                "produces": ["application/json"],
+
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key":[],
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
+        },
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Order": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "petId": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "shipDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Order Status",
+                    "enum": ["placed", "approved", "delivered"]
+                },
+                "complete": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "xml": {
+                "name": "Order"
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Category"
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "mobile_number": {
+                    "type": "string",
+                    "required":true
+                },
+                "user_type": {
+                    "type": "string",
+                    "required":true
+                },
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "UserSignInObject":{
+            "type": "object",
+            "properties": {
+                "mobile_number": {
+                    "type": "string",
+                    "required":true
+                },
+                "password": {
+                    "type": "string",
+                    "required":true
+                },
+                "token": {
+                    "type": "string",
+                    "required":true
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Tag": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Tag"
+            }
+        },
+        "Pet": {
+            "type": "object",
+            "required": ["name", "photoUrls"],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "category": {
+                    "$ref": "#/definitions/Category"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "doggie"
+                },
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "name": "photoUrl",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "xml": {
+                        "name": "tag",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "$ref": "#/definitions/Tag"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "pet status in the store",
+                    "enum": ["available", "pending", "sold"]
+                }
+            },
+            "xml": {
+                "name": "Pet"
+            }
+        },
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
