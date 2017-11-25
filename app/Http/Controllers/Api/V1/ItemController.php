@@ -186,4 +186,15 @@ class ItemController extends BaseController
         $stock = Item::join('units','units.id','items.unit_id')->join('categories','categories.id','items.cat_id')->select('items.item_name as item_name','units.unit as unit','items.weight as weight','categories.category as category','items.quantity as quantity','items.location as location')->where('items.item_name','like',$slug."%")->orWhere('categories.category','like',$slug."%")->orWhere('items.location','like',$slug."%")->orderBy('item_name','asc')->get();
         return $this->response->array(['stock'=>$stock]);
    }
+
+   public function getTaxReport(){
+        $tax_report = ReceiveItem::join('items','items.id','receive_items.item_id')->join('vendors','vendors.id','receive_items.vendor_id')->join('tax_types','tax_types.id','items.tax_type_id')->select('receive_items.id as id','receive_items.rec_date as rec_date','items.item_name as item_name','vendors.vendor_name as vendor_name','tax_types.tax_type as tax_type','receive_items.quantity as quantity', 'receive_items.unit_price as price', 'receive_items.vat_rate as tax_rate')->whereNull('items.deleted_at')->get();
+          return $this->response->array(['tax_report'=>$tax_report]);
+   }
+
+   public function getTaxReportOnSearch($slug){
+        $tax_report = ReceiveItem::join('items','items.id','receive_items.item_id')->join('vendors','vendors.id','receive_items.vendor_id')->join('tax_types','tax_types.id','items.tax_type_id')->select('receive_items.id as id','receive_items.rec_date as rec_date','items.item_name as item_name','vendors.vendor_name as vendor_name','tax_types.tax_type as tax_type','receive_items.quantity as quantity', 'receive_items.unit_price as price', 'receive_items.vat_rate as tax_rate')->whereNull('items.deleted_at')->where(function($q) use($slug) {
+          $q->where('items.item_name','like',$slug."%")->orWhere('vendors.vendor_name','like',$slug."%")->orWhere('tax_types.tax_type','like',$slug."%")->orWhere('receive_items.rec_date','like',$slug."%");})->get();
+          return $this->response->array(['tax_report'=>$tax_report]);
+   }
 }

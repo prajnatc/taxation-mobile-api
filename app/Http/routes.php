@@ -113,8 +113,16 @@ $api->get('get-item-stock/{slug}', [
             'as' => 'user.get-item-stock',
             'uses' => 'ItemController@getItemStockOnSearch',
         ]);
- 
 
+$api->get('get-tax-report', [
+            'as' => 'user.get-tax-report',
+            'uses' => 'ItemController@getTaxReport',
+        ]);
+
+$api->get('get-tax-report/{slug}', [
+            'as' => 'user.get-tax-report',
+            'uses' => 'ItemController@getTaxReportOnSearch',
+        ]);
 });
 
 
